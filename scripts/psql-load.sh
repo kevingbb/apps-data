@@ -43,3 +43,17 @@ INSERT INTO inventory (id, name, quantity) VALUES (2, 'milk', 100);
 SELECT * FROM inventory;
 # Quit
 \quit
+
+# Setup Tutorials Database
+# List Databases
+\l
+# List Tables, Views, Sequences
+\d
+# Create New DB
+CREATE DATABASE tutorials;
+\c tutorials
+# Run API App to Generate Tables + Data
+# Check for Tables + Data
+SELECT * FROM tutorials;
+# Quit
+\quit
