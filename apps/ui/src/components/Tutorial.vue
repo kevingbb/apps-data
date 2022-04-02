@@ -21,25 +21,25 @@
       </div>
     </form>
 
-    <button class="badge badge-primary mr-2"
+    <button class="badge bg-primary mr-2"
       v-if="currentTutorial.published"
       @click="updatePublished(false)"
     >
       UnPublish
     </button>
-    <button v-else class="badge badge-primary mr-2"
+    <button v-else class="badge bg-primary mr-2"
       @click="updatePublished(true)"
     >
       Publish
     </button>
 
-    <button class="badge badge-danger mr-2"
+    <button class="badge bg-danger mr-2"
       @click="deleteTutorial"
     >
       Delete
     </button>
 
-    <button type="submit" class="badge badge-success"
+    <button type="submit" class="badge bg-success"
       @click="updateTutorial"
     >
       Update
@@ -57,7 +57,7 @@
 import TutorialDataService from "../services/TutorialDataService";
 
 export default {
-  name: "tutorial",
+  name: "detail-tutorial",
   data() {
     return {
       currentTutorial: null,

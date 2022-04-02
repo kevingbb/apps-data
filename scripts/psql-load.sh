@@ -19,31 +19,6 @@ docker run -it --rm postgres:13.4 psql --host="${PGNAME}.postgres.database.azure
   --username="${PG_ADMIN}" \
   --dbname=postgres
 
-# Setup Inventory Database
-# List Databases
-\l
-# List Tables, Views, Sequences
-\d
-# Create New DB
-CREATE DATABASE cnainventory;
-\c cnainventory
-# Create Table
-CREATE TABLE inventory (
-id serial PRIMARY KEY, 
-name VARCHAR(50), 
-quantity INTEGER,
-    date DATE NOT NULL DEFAULT NOW()::date
-);
-# Verify Table
-\dt
-# Insert Sample Data
-INSERT INTO inventory (id, name, quantity) VALUES (1, 'yogurt', 200);
-INSERT INTO inventory (id, name, quantity) VALUES (2, 'milk', 100);
-# Check Sample Data
-SELECT * FROM inventory;
-# Quit
-\quit
-
 # Setup Tutorials Database
 # List Databases
 \l
