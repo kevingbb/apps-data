@@ -3,7 +3,25 @@ const dbConfig = require("../config/db.config.js");
 const Sequelize = require("sequelize");
 const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
   host: dbConfig.HOST,
+  port: dbConfig.DB_PORT,
   dialect: dbConfig.dialect,
+  dialectOptions: {
+    ssl: {
+    require: dbConfig.SSL_ENABLED,
+    rejectUnauthorized: false
+  },
+  logging: (...msg) => console.log(msg),
+  retry: {
+    match: [
+      Sequelize.ConnectionError,
+      Sequelize.ConnectionTimedOutError,
+      Sequelize.TimeoutError],
+    max: 3, // maximum amount of tries
+    timeout: 10000, // throw if no response or error within millisecond timeout
+    backoffBase: 1000, // Initial backoff duration in ms. Default: 100
+    backoffExponent: 1.5 // Exponent to increase backoff each try. Default: 1.1
+  }
+  },
 
   pool: {
     max: dbConfig.pool.max,
