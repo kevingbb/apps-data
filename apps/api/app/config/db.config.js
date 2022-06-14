@@ -4,7 +4,7 @@ module.exports = {
   PASSWORD: process.env.APP_PASSWORD || "postgres",
   DB: process.env.APP_DB || "tutorials",
   DB_PORT: process.env.DB_PORT || "5432",
-  SSL_ENABLED: process.env.SSL_ENABLED || true,
+  SSL_ENABLED: process.env.SSL_ENABLED || false,
   dialect: process.env.APP_DIALECT || "postgres",
   pool: {
     max: 10, //Maximum number of connection in pool
