@@ -1,13 +1,28 @@
 <template>
   <div id="app">
     <nav class="navbar navbar-expand navbar-dark bg-dark">
-      <router-link to="/" class="navbar-brand">Apps + Data Sample</router-link>
+      <router-link
+        to="/"
+        class="navbar-brand"
+      >
+        Apps + Data Sample
+      </router-link>
       <div class="navbar-nav mr-auto">
         <li class="nav-item">
-          <router-link to="/tutorials" class="nav-link">Tutorials</router-link>
+          <router-link
+            to="/tutorials"
+            class="nav-link"
+          >
+            Tutorials
+          </router-link>
         </li>
         <li class="nav-item">
-          <router-link to="/add" class="nav-link">Add</router-link>
+          <router-link
+            to="/add"
+            class="nav-link"
+          >
+            Add
+          </router-link>
         </li>
       </div>
     </nav>
@@ -20,6 +35,6 @@
 
 <script>
 export default {
-  name: "app"
+  name: "App"
 };
 </script>

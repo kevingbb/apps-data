@@ -1,18 +1,27 @@
 <template>
-  <div v-if="currentTutorial" class="edit-form">
+  <div
+    v-if="currentTutorial"
+    class="edit-form"
+  >
     <h4>Tutorial</h4>
     <form>
       <div class="form-group">
         <label for="title">Title</label>
-        <input type="text" class="form-control" id="title"
+        <input
+          id="title"
           v-model="currentTutorial.title"
-        />
+          type="text"
+          class="form-control"
+        >
       </div>
       <div class="form-group">
         <label for="description">Description</label>
-        <input type="text" class="form-control" id="description"
+        <input
+          id="description"
           v-model="currentTutorial.description"
-        />
+          type="text"
+          class="form-control"
+        >
       </div>
 
       <div class="form-group">
@@ -21,25 +30,31 @@
       </div>
     </form>
 
-    <button class="badge bg-primary mr-2"
+    <button
       v-if="currentTutorial.published"
+      class="badge bg-primary mr-2"
       @click="updatePublished(false)"
     >
       UnPublish
     </button>
-    <button v-else class="badge bg-primary mr-2"
+    <button
+      v-else
+      class="badge bg-primary mr-2"
       @click="updatePublished(true)"
     >
       Publish
     </button>
 
-    <button class="badge bg-danger mr-2"
+    <button
+      class="badge bg-danger mr-2"
       @click="deleteTutorial"
     >
       Delete
     </button>
 
-    <button type="submit" class="badge bg-success"
+    <button
+      type="submit"
+      class="badge bg-success"
       @click="updateTutorial"
     >
       Update
@@ -48,7 +63,7 @@
   </div>
 
   <div v-else>
-    <br />
+    <br>
     <p>Please click on a Tutorial...</p>
   </div>
 </template>
@@ -57,12 +72,16 @@
 import TutorialDataService from "../services/TutorialDataService";
 
 export default {
-  name: "detail-tutorial",
+  name: "DetailTutorial",
   data() {
     return {
       currentTutorial: null,
       message: ''
     };
+  },
+  mounted() {
+    this.message = '';
+    this.getTutorial(this.$route.params.id);
   },
   methods: {
     getTutorial(id) {
@@ -116,17 +135,13 @@ export default {
           console.log(e);
         });
     }
-  },
-  mounted() {
-    this.message = '';
-    this.getTutorial(this.$route.params.id);
   }
 };
 </script>
 
 <style>
-.edit-form {
-  max-width: 300px;
-  margin: auto;
-}
+  .edit-form {
+    max-width: 300px;
+    margin: auto;
+  }
 </style>

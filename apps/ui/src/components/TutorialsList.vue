@@ -3,11 +3,11 @@
     <div class="col-md-8">
       <div class="input-group mb-3">
         <input
+          v-model="searchTitle"
           type="text"
           class="form-control"
           placeholder="Search by title"
-          v-model="searchTitle"
-        />
+        >
         <div class="input-group-append">
           <button
             class="btn btn-outline-secondary"
@@ -22,22 +22,19 @@
     <div class="col-md-12">
       <div class="mb-3">
         Items per Page:
-        <select v-model="pageSize" @change="handlePageSizeChange($event)">
-          <option v-for="size in pageSizes" :key="size" :value="size">
+        <select
+          v-model="pageSize"
+          @change="handlePageSizeChange($event)"
+        >
+          <option
+            v-for="size in pageSizes"
+            :key="size"
+            :value="size"
+          >
             {{ size }}
           </option>
         </select>
       </div>
-<!--
-      <b-pagination
-        v-model="page"
-        :total-rows="count"
-        :per-page="pageSize"
-        prev-text="Prev"
-        next-text="Next"
-        @change="handlePageChange"
-      ></b-pagination>
--->
       <paginate
         v-model="page"
         :page-count="pageCount"
@@ -48,22 +45,28 @@
         :next-text="'Next'"
         :container-class="'pagination'"
         :page-class="'page-item'"
-      ></paginate>
+      />
     </div>
     <div class="col-md-6">
       <h4>Tutorials List</h4>
-      <ul class="list-group" id="tutorials-list">
+      <ul
+        id="tutorials-list"
+        class="list-group"
+      >
         <li
-          class="list-group-item"
-          :class="{ active: index == currentIndex }"
           v-for="(tutorial, index) in tutorials"
           :key="index"
+          class="list-group-item"
+          :class="{ active: index == currentIndex }"
           @click="setActiveTutorial(tutorial, index)"
         >
           {{ tutorial.title }}
         </li>
       </ul>
-      <button class="m-3 btn btn-sm btn-danger" @click="removeAllTutorials">
+      <button
+        class="m-3 btn btn-sm btn-danger"
+        @click="removeAllTutorials"
+      >
         Remove All
       </button>
     </div>
@@ -79,11 +82,15 @@
         <div>
           <label><strong>Status:</strong></label> {{ currentTutorial.published ? "Published" : "Pending" }}
         </div>
-
-        <router-link :to="'/tutorials/' + currentTutorial.id" class="badge bg-warning">Edit</router-link>
+        <router-link
+          :to="'/tutorials/' + currentTutorial.id"
+          class="badge bg-warning"
+        >
+          Edit
+        </router-link>
       </div>
       <div v-else>
-        <br />
+        <br>
         <p>Please click on a Tutorial...</p>
       </div>
     </div>
@@ -95,7 +102,7 @@ import TutorialDataService from "../services/TutorialDataService";
 import paginate from 'vuejs-paginate-next';
 
 export default {
-  name: "tutorials-list",
+  name: "TutorialsList",
   components: {
     paginate,
   },
@@ -112,6 +119,9 @@ export default {
       pageSizes: [3, 6, 9],
       title: "",
     };
+  },
+  mounted() {
+    this.retrieveTutorials();
   },
   methods: {
     getRequestParams(searchTitle, page, pageSize) {
@@ -179,17 +189,14 @@ export default {
           console.log(e);
         });
     },
-  },
-  mounted() {
-    this.retrieveTutorials();
   }
 };
 </script>
 
 <style>
-.list {
-  text-align: left;
-  max-width: 750px;
-  margin: auto;
-}
+  .list {
+    text-align: left;
+    max-width: 750px;
+    margin: auto;
+  }
 </style>
