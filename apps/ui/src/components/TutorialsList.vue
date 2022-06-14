@@ -7,12 +7,13 @@
           type="text"
           class="form-control"
           placeholder="Search by title"
+          @keyup.enter="page = 1; currentTutorial = null; currentIndex = -1; retrieveTutorials();"
         >
         <div class="input-group-append">
           <button
             class="btn btn-outline-secondary"
             type="button"
-            @click="page = 1; retrieveTutorials();"
+            @click="page = 1; currentTutorial = null; currentIndex = -1; retrieveTutorials();"
           >
             Search
           </button>
@@ -99,13 +100,9 @@
 
 <script>
 import TutorialDataService from "../services/TutorialDataService";
-import paginate from 'vuejs-paginate-next';
 
 export default {
   name: "TutorialsList",
-  components: {
-    paginate,
-  },
   data() {
     return {
       tutorials: [],
@@ -159,11 +156,15 @@ export default {
 
     handlePageChange(value) {
       this.page = value;
+      this.currentTutorial = null;
+      this.currentIndex = -1;
       this.retrieveTutorials();
     },
 
     handlePageSizeChange(event) {
       this.pageSize = event.target.value;
+      this.currentTutorial = null;
+      this.currentIndex = -1;
       this.page = 1;
       this.retrieveTutorials();
     },
