@@ -2,21 +2,59 @@
   <div class="list row">
     <div class="col-md-8">
       <div class="input-group mb-3">
-        <input type="text" class="form-control" placeholder="Search by title"
-          v-model="title"/>
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Search by title"
+          v-model="searchTitle"
+        />
         <div class="input-group-append">
-          <button class="btn btn-outline-secondary" type="button"
-            @click="searchTitle"
+          <button
+            class="btn btn-outline-secondary"
+            type="button"
+            @click="page = 1; retrieveTutorials();"
           >
             Search
           </button>
         </div>
       </div>
     </div>
+    <div class="col-md-12">
+      <div class="mb-3">
+        Items per Page:
+        <select v-model="pageSize" @change="handlePageSizeChange($event)">
+          <option v-for="size in pageSizes" :key="size" :value="size">
+            {{ size }}
+          </option>
+        </select>
+      </div>
+<!--
+      <b-pagination
+        v-model="page"
+        :total-rows="count"
+        :per-page="pageSize"
+        prev-text="Prev"
+        next-text="Next"
+        @change="handlePageChange"
+      ></b-pagination>
+-->
+      <paginate
+        v-model="page"
+        :page-count="pageCount"
+        :page-range="pageSize"
+        :margin-pages="2"
+        :click-handler="handlePageChange"
+        :prev-text="'Prev'"
+        :next-text="'Next'"
+        :container-class="'pagination'"
+        :page-class="'page-item'"
+      ></paginate>
+    </div>
     <div class="col-md-6">
       <h4>Tutorials List</h4>
-      <ul class="list-group">
-        <li class="list-group-item"
+      <ul class="list-group" id="tutorials-list">
+        <li
+          class="list-group-item"
           :class="{ active: index == currentIndex }"
           v-for="(tutorial, index) in tutorials"
           :key="index"
@@ -25,7 +63,6 @@
           {{ tutorial.title }}
         </li>
       </ul>
-
       <button class="m-3 btn btn-sm btn-danger" @click="removeAllTutorials">
         Remove All
       </button>
@@ -55,27 +92,70 @@
 
 <script>
 import TutorialDataService from "../services/TutorialDataService";
+import paginate from 'vuejs-paginate-next';
 
 export default {
   name: "tutorials-list",
+  components: {
+    paginate,
+  },
   data() {
     return {
       tutorials: [],
       currentTutorial: null,
       currentIndex: -1,
-      title: ""
+      searchTitle: "",
+      page: 1,
+      count: 0,
+      pageCount: 0,
+      pageSize: 3,
+      pageSizes: [3, 6, 9],
+      title: "",
     };
   },
   methods: {
+    getRequestParams(searchTitle, page, pageSize) {
+      let params = {};
+      if (searchTitle) {
+        params["title"] = searchTitle;
+      }
+      if (page) {
+        params["page"] = page - 1;
+      }
+      if (pageSize) {
+        params["size"] = pageSize;
+      }
+      return params;
+    },
+
     retrieveTutorials() {
-      TutorialDataService.getAll()
+      const params = this.getRequestParams(
+        this.searchTitle,
+        this.page,
+        this.pageSize
+      );
+      TutorialDataService.getAll(params)
         .then(response => {
-          this.tutorials = response.data;
+          const { tutorials, totalItems, totalPages } = response.data;
+          this.tutorials = tutorials;
+          this.count = totalItems;
+          this.pageCount = totalPages;
           console.log(response.data);
         })
         .catch(e => {
           console.log(e);
         });
+    },
+
+    handlePageChange(value) {
+      this.page = value;
+      this.retrieveTutorials();
+    },
+
+    handlePageSizeChange(event) {
+      this.pageSize = event.target.value;
+      this.page = 1;
+      this.retrieveTutorials();
     },
 
     refreshList() {
@@ -99,18 +179,6 @@ export default {
           console.log(e);
         });
     },
-    
-    searchTitle() {
-      TutorialDataService.findByTitle(this.title)
-        .then(response => {
-          this.tutorials = response.data;
-          this.setActiveTutorial(null);
-          console.log(response.data);
-        })
-        .catch(e => {
-          console.log(e);
-        });
-    }
   },
   mounted() {
     this.retrieveTutorials();

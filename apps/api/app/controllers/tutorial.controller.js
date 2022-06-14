@@ -2,6 +2,19 @@ const db = require("../models");
 const Tutorial = db.tutorials;
 const Op = db.Sequelize.Op;
 
+const getPagination = (page, size) => {
+  const limit = size ? +size : 3;
+  const offset = page ? page * limit : 0;
+  return { limit, offset };
+};
+
+const getPagingData = (data, page, limit) => {
+  const { count: totalItems, rows: tutorials } = data;
+  const currentPage = page ? +page : 0;
+  const totalPages = Math.ceil(totalItems / limit);
+  return { totalItems, tutorials, totalPages, currentPage };
+};
+
 // Create and Save a new Tutorial
 exports.create = (req, res) => {
   // Validate request
@@ -32,14 +45,31 @@ exports.create = (req, res) => {
     });
 };
 
+// // Retrieve all Tutorials from the database.
+// exports.findAll = (req, res) => {
+//   const title = req.query.title;
+//   var condition = title ? { title: { [Op.iLike]: `%${title}%` } } : null;
+
+//   Tutorial.findAll({ where: condition })
+//     .then(data => {
+//       res.send(data);
+//     })
+//     .catch(err => {
+//       res.status(500).send({
+//         message:
+//           err.message || "Some error occurred while retrieving tutorials."
+//       });
+//     });
+// };
 // Retrieve all Tutorials from the database.
 exports.findAll = (req, res) => {
-  const title = req.query.title;
-  var condition = title ? { title: { [Op.iLike]: `%${title}%` } } : null;
-
-  Tutorial.findAll({ where: condition })
+  const { page, size, title } = req.query;
+  var condition = title ? { title: { [Op.like]: `%${title}%` } } : null;
+  const { limit, offset } = getPagination(page, size);
+  Tutorial.findAndCountAll({ where: condition, limit, offset })
     .then(data => {
-      res.send(data);
+      const response = getPagingData(data, page, limit);
+      res.send(response);
     })
     .catch(err => {
       res.status(500).send({
@@ -137,11 +167,27 @@ exports.deleteAll = (req, res) => {
     });
 };
 
+// // find all published Tutorial
+// exports.findAllPublished = (req, res) => {
+//   Tutorial.findAll({ where: { published: true } })
+//     .then(data => {
+//       res.send(data);
+//     })
+//     .catch(err => {
+//       res.status(500).send({
+//         message:
+//           err.message || "Some error occurred while retrieving tutorials."
+//       });
+//     });
+// };
 // find all published Tutorial
 exports.findAllPublished = (req, res) => {
-  Tutorial.findAll({ where: { published: true } })
+  const { page, size } = req.query;
+  const { limit, offset } = getPagination(page, size);
+  Tutorial.findAndCountAll({ where: { published: true }, limit, offset })
     .then(data => {
-      res.send(data);
+      const response = getPagingData(data, page, limit);
+      res.send(response);
     })
     .catch(err => {
       res.status(500).send({
