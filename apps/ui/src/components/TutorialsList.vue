@@ -24,7 +24,7 @@
       <div class="mb-3">
         Items per Page:
         <select
-          v-model="pageSize"
+          v-model.number="pageSize"
           @change="handlePageSizeChange($event)"
         >
           <option
@@ -134,7 +134,6 @@ export default {
       }
       return params;
     },
-
     retrieveTutorials() {
       const params = this.getRequestParams(
         this.searchTitle,
@@ -153,33 +152,28 @@ export default {
           console.log(e);
         });
     },
-
     handlePageChange(value) {
       this.page = value;
       this.currentTutorial = null;
       this.currentIndex = -1;
       this.retrieveTutorials();
     },
-
     handlePageSizeChange(event) {
-      this.pageSize = event.target.value;
+      this.pageSize = parseInt(event.target.value);
       this.currentTutorial = null;
       this.currentIndex = -1;
       this.page = 1;
       this.retrieveTutorials();
     },
-
     refreshList() {
       this.retrieveTutorials();
       this.currentTutorial = null;
       this.currentIndex = -1;
     },
-
     setActiveTutorial(tutorial, index) {
       this.currentTutorial = tutorial;
       this.currentIndex = tutorial ? index : -1;
     },
-
     removeAllTutorials() {
       TutorialDataService.deleteAll()
         .then(response => {
