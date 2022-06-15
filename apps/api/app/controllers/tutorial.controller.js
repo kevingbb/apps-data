@@ -45,22 +45,6 @@ exports.create = (req, res) => {
     });
 };
 
-// // Retrieve all Tutorials from the database.
-// exports.findAll = (req, res) => {
-//   const title = req.query.title;
-//   var condition = title ? { title: { [Op.iLike]: `%${title}%` } } : null;
-
-//   Tutorial.findAll({ where: condition })
-//     .then(data => {
-//       res.send(data);
-//     })
-//     .catch(err => {
-//       res.status(500).send({
-//         message:
-//           err.message || "Some error occurred while retrieving tutorials."
-//       });
-//     });
-// };
 // Retrieve all Tutorials from the database.
 exports.findAll = (req, res) => {
   const { page, size, title } = req.query;
@@ -167,19 +151,6 @@ exports.deleteAll = (req, res) => {
     });
 };
 
-// // find all published Tutorial
-// exports.findAllPublished = (req, res) => {
-//   Tutorial.findAll({ where: { published: true } })
-//     .then(data => {
-//       res.send(data);
-//     })
-//     .catch(err => {
-//       res.status(500).send({
-//         message:
-//           err.message || "Some error occurred while retrieving tutorials."
-//       });
-//     });
-// };
 // find all published Tutorial
 exports.findAllPublished = (req, res) => {
   const { page, size } = req.query;

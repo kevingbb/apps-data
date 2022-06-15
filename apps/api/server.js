@@ -1,3 +1,18 @@
+const appInsights = require("applicationinsights");
+// Set APPLICATIONINSIGHTS_CONNECTION_STRING environment variable.
+appInsights.setup()
+    .setAutoDependencyCorrelation(true)
+    .setAutoCollectRequests(true)
+    .setAutoCollectPerformance(true, true)
+    .setAutoCollectExceptions(true)
+    .setAutoCollectDependencies(true)
+    .setAutoCollectConsole(true)
+    .setUseDiskRetryCaching(true)
+    .setSendLiveMetrics(true)
+    .setDistributedTracingMode(appInsights.DistributedTracingModes.AI_AND_W3C);
+    // Provide a CloudRole name.
+appInsights.defaultClient.context.tags[appInsights.defaultClient.context.keys.cloudRole] = "AppsDataAPI";
+appInsights.start();
 const express = require("express");
 const cors = require("cors");
 

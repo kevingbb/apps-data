@@ -19,11 +19,12 @@
   "author": "bezkoder",
   "license": "ISC",
   "dependencies": {
+    "applicationinsights": "^2.3.3",
     "cors": "^2.8.5",
     "express": "^4.18.1",
+    "mysql2": "^2.0.2",
     "pg": "^8.6.0",
     "pg-hstore": "^2.3.4",
-    "sequelize": "^6.20.1",
-    "mysql2": "^2.0.2"
+    "sequelize": "^6.20.1"
   }
 }
