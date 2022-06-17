@@ -20,8 +20,30 @@
             "request": "launch",
             "url": "http://localhost:8081/",
             "webRoot": "${workspaceFolder}/apps/ui",
-            "outFiles": ["${workspaceFolder}/apps/ui/**"],
+            "outFiles": [
+                "${workspaceFolder}/apps/ui/**"
+            ],
             "preLaunchTask": "serve"
+        },
+        {
+            "name": "Launch Generator",
+            "type": "pwa-node",
+            "request": "launch",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}/apps/generator/app.js"
+        },
+        {
+            "name": "Docker Node.js Launch",
+            "type": "docker",
+            "request": "launch",
+            "preLaunchTask": "docker-run: debug",
+            "platform": "node",
+            "node": {
+                "package": "${workspaceFolder}/apps/generator/package.json",
+                "localRoot": "${workspaceFolder}/apps/generator"
+            }
         }
     ]
 }

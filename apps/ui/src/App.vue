@@ -1,12 +1,11 @@
 <template>
   <div id="app">
     <nav class="navbar navbar-expand navbar-dark bg-dark">
-      <router-link
-        to="/"
-        class="navbar-brand"
-      >
-        Apps + Data Sample
-      </router-link>
+      <div class="nav-item">
+        <a :href="$router.resolve({name: 'home'}).href">
+          Apps + Data Sample
+        </a>
+      </div>
       <div class="navbar-nav mr-auto">
         <li class="nav-item">
           <router-link

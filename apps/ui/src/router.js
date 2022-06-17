@@ -2,6 +2,11 @@ import { createWebHistory, createRouter } from "vue-router";
 
 const routes =  [
   {
+    path: '/',
+    name: 'home',
+    component: require('./components/TutorialsList').default,
+  },
+  {
     path: "/",
     alias: "/tutorials",
     name: "tutorials",

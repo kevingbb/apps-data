@@ -38,6 +38,7 @@ exports.create = (req, res) => {
       res.send(data);
     })
     .catch(err => {
+      console.error("ERROR - " + new Date() + ' - ' + err)
       res.status(500).send({
         message:
           err.message || "Some error occurred while creating the Tutorial."
@@ -56,6 +57,7 @@ exports.findAll = (req, res) => {
       res.send(response);
     })
     .catch(err => {
+      console.error("ERROR - " + new Date() + ' - ' + err)
       res.status(500).send({
         message:
           err.message || "Some error occurred while retrieving tutorials."
@@ -78,6 +80,7 @@ exports.findOne = (req, res) => {
       }
     })
     .catch(err => {
+      console.error("ERROR - " + new Date() + ' - ' + err)
       res.status(500).send({
         message: "Error retrieving Tutorial with id=" + id
       });
@@ -103,6 +106,7 @@ exports.update = (req, res) => {
       }
     })
     .catch(err => {
+      console.error("ERROR - " + new Date() + ' - ' + err)
       res.status(500).send({
         message: "Error updating Tutorial with id=" + id
       });
@@ -128,6 +132,7 @@ exports.delete = (req, res) => {
       }
     })
     .catch(err => {
+      console.error("ERROR - " + new Date() + ' - ' + err)
       res.status(500).send({
         message: "Could not delete Tutorial with id=" + id
       });
@@ -144,6 +149,7 @@ exports.deleteAll = (req, res) => {
       res.send({ message: `${nums} Tutorials were deleted successfully!` });
     })
     .catch(err => {
+      console.error("ERROR - " + new Date() + ' - ' + err)
       res.status(500).send({
         message:
           err.message || "Some error occurred while removing all tutorials."
@@ -161,6 +167,7 @@ exports.findAllPublished = (req, res) => {
       res.send(response);
     })
     .catch(err => {
+      console.error("ERROR - " + new Date() + ' - ' + err)
       res.status(500).send({
         message:
           err.message || "Some error occurred while retrieving tutorials."

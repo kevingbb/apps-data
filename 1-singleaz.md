@@ -6,6 +6,14 @@ APP_NAMESPACE=nodeapp-single
 kubectl create namespace $APP_NAMESPACE
 ```
 
+##Create App Insights resource
+```bash
+APPINSIGHTS_NAME="${AKS_NAME}ai"
+# Create Resource
+az monitor app-insights component create -g $RG --app $APPINSIGHTS_NAME -l $LOC --kind web --application-type web
+# Capture App Insights Connection String
+APPLICATIONINSIGHTS_CONNECTION_STRING=$(az monitor app-insights component show -g $RG --app $APPINSIGHTS_NAME -o tsv --query 'connectionString')
+```
 
 
 ## Create secret 
@@ -21,7 +29,8 @@ kubectl create secret --namespace $APP_NAMESPACE generic db-connection \
   --from-literal=APP_DB='tutorials' \
   --from-literal=DB_PORT='5432' \
   --from-literal=SSL_ENABLED=true \
-  --from-literal=APP_DIALECT=postgres
+  --from-literal=APP_DIALECT=postgres \
+  --from-literal=APPLICATIONINSIGHTS_CONNECTION_STRING=$APPLICATIONINSIGHTS_CONNECTION_STRING
 ```
 ## Option 2 MySQL 
 ```bash
@@ -32,7 +41,8 @@ kubectl create secret --namespace $APP_NAMESPACE generic db-connection \
   --from-literal=APP_DB='tutorials' \
   --from-literal=DB_PORT='3306' \
   --from-literal=SSL_ENABLED=false \
-  --from-literal=APP_DIALECT=mysql
+  --from-literal=APP_DIALECT=mysql \
+  --from-literal=APPLICATIONINSIGHTS_CONNECTION_STRING=$APPLICATIONINSIGHTS_CONNECTION_STRING
 ```
 
 #verify secret 
@@ -50,6 +60,7 @@ SINGLE_API_DNS="${PREFIX}${DATE}api" #we make use of the new AKS DNS lables feat
 SINGLE_UI_DNS="${PREFIX}${DATE}ui" #we make use of the new AKS DNS lables feature 
 API_APP_NAME="${PREFIX}-api"
 UI_APP_NAME="${PREFIX}-ui"
+GENERATOR_APP_NAME="${PREFIX}-generator"
 ```
 
 ##Deploy the API APP 
@@ -124,6 +135,11 @@ spec:
             secretKeyRef:
               name: db-connection
               key: SSL_ENABLED
+        - name: APPLICATIONINSIGHTS_CONNECTION_STRING
+          valueFrom:
+            secretKeyRef:
+              name: db-connection
+              key: APPLICATIONINSIGHTS_CONNECTION_STRING
         ports:
         - name: http
           containerPort: 8080
@@ -171,6 +187,7 @@ data:
       const config = (() => {
           return {
             "VUE_APP_APIURL": "http://${SINGLE_API_DNS}.${LOCATION}.cloudapp.azure.com/api/",
+            "APPLICATIONINSIGHTS_CONNECTION_STRING": "${APPLICATIONINSIGHTS_CONNECTION_STRING}"
           };
         })();
 ---
@@ -251,6 +268,49 @@ spec:
   selector:
     app: ${UI_APP_NAME}
     environment: dev
+EOF
+```
+
+##Now deploy the Generator
+```bash
+cat <<EOF | kubectl apply -f -
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: ${APP_NAMESPACE}
+  labels:
+    app: ${GENERATOR_APP_NAME}
+    environment: dev
+  name: ${GENERATOR_APP_NAME}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: appsdata-generator
+      environment: dev
+  template:
+    metadata:
+      labels:
+        app: appsdata-generator
+        environment: dev
+    spec:
+      containers:
+      - image: ${ACR_NAME}.azurecr.io/appsdata/generator:v1
+        name: ${GENERATOR_APP_NAME}
+        imagePullPolicy: Always
+        env:
+        - name: TIMER_INTERVAL
+          value: "2000"
+        - name: VUE_APP_APIURL
+          value: "http://${SINGLE_API_DNS}.${LOCATION}.cloudapp.azure.com/api/"
+        resources:
+          requests:
+            memory: "250Mi"
+            cpu: "250m"
+          limits:
+            memory: "250Mi"
+            cpu: "250m"
+      restartPolicy: Always
 EOF
 ```
 

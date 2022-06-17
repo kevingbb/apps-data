@@ -1,0 +1,13 @@
+{
+  "name": "generator",
+  "version": "0.1.0",
+  "description": "Used to generate load against the api to simulate continuous requests.",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "startasync": "node appasync.js"
+  },
+  "dependencies": {
+    "axios": "^0.27.2"
+  }
+}

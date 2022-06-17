@@ -4,6 +4,18 @@ Adding observability to an application will help with troubleshooting issues and
 
 ## Add Application Insights
 
+##create app insights resource
+```bash
+# Create Azure Application Insights
+LOCATION=eastus # Location 
+AKS_NAME=nodeapp
+RG=$AKS_NAME-$LOCATION
+APPINSIGHTS_NAME="${AKS_NAME}ai"
+az monitor app-insights component create -g $RG --app $APPINSIGHTS_NAME -l $LOC --kind web --application-type web > /dev/null
+# Capture App Insights Connection String
+APPLICATIONINSIGHTS_CONNECTION_STRING=$(az monitor app-insights component show -g $RG --app $APPINSIGHTS_NAME -o tsv --query 'connectionString')
+```
+
 ##add app insights to api
 ```bash
 cd apps/api

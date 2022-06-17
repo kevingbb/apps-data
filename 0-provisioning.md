@@ -331,6 +331,9 @@ az acr build --registry $ACR_NAME --image appsdata/api:v1 --file Dockerfile .
 # Build and Push the UI App 
 cd /apps/ui
 az acr build --registry $ACR_NAME --image appsdata/ui:v1 --file Dockerfile .
+# Build and Push the Generator App
+cd /workspace/apps/generator
+az acr build --registry $ACR_NAME --image appsdata/generator:v1 --file Dockerfile .
 ```
 
 
