@@ -1,6 +1,12 @@
 module.exports = {
+    root: true,
     env: {
       node: true,
+      browser: true
+    },
+    parser: 'vue-eslint-parser',
+    parserOptions: {
+      sourceType: 'module',
     },
     extends: [
       'eslint:recommended',
@@ -11,6 +17,7 @@ module.exports = {
       // 'vue/no-unused-vars': 'error'
     },
     globals: {
-        config: "readable",
+      config: "readable",
+      Vue: true
     }
 }

@@ -4,7 +4,7 @@ const routes =  [
   {
     path: '/',
     name: 'home',
-    component: require('./components/TutorialsList').default,
+    component: () => import('./components/TutorialsList'),
   },
   {
     path: "/",
